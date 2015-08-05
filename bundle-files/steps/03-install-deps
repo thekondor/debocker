@@ -1,0 +1,16 @@
+#!/bin/bash
+#
+# installs package dependencies
+# assumes that /root/control exists
+# (presumably added by Dockerfile)
+
+echo "== STAGE 03 (install dependencies) =="
+
+set -eux
+
+/usr/lib/pbuilder/pbuilder-satisfydepends-aptitude \
+    --control /root/control
+
+apt-get -y clean
+
+echo "== ENDSTAGE =="

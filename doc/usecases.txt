@@ -1,0 +1,89 @@
+
+Debocker is for:
+
+  * building deb packages easily
+  * building deb packages *reproducibly*
+
+1) Build a package magically.
+
+ - build a package for the current system
+
+    $ debocker build pkg
+
+ - build a package for any debian release
+
+    $ debocker build -t testing pkg
+
+ - build a package for debian release
+
+    $ debocker build -t ubuntu/raring pkg
+
+ - build a particular version of a packge
+
+    $ debocker build pkg=1.23
+
+ - build a particular git-tag of a package
+
+    $ debocker build-git pkg debian/0.12.4-1
+    $ debocker build-git http://github.com/thinred/new-package master
+
+ This one uses a fact that *some* Debian packages use git to version
+ control packages. When you give URL, it will check the repo out
+ at a given tag (master by default) and build it
+
+ - build a package from URL
+
+    $ debocker build http://www.somewhere.com/package.debr
+
+Notes:
+  * probably puts the package in a cache or something
+  * when it's done, it shows the container ID
+
+2) Get a package at a particular version, distribution, etc.
+
+ $ debocker get pkg=1.23
+ $ debocker get-git pkg
+
+Notes:
+  * does not build, just creates a directory. Maybe initializes
+    'debocker.conf' in debian/
+
+3) Build current, local package sources
+
+ $ debocker build  (with no parameters)
+ $ debocker build --path $path   (builds a package at $path)
+
+Notes:
+
+ * takes the current state of the repo and builds it in a container
+ * signs and does all that kind of magic
+
+4) Package a package (sic!) in a reproducible bundle
+
+ $ debocker bundle pkg=1.23
+ $ debocker bundle   (for the current directory)
+
+Notes:
+  * builds the package (to test if it builds at all)
+  * takes the diff and stores in a compressed file
+    and information how to build it later;
+    now, this one is tricky - docker does not allow
+    this, but there is a feature coming that may kind of solve it:
+    https://github.com/dotcloud/docker/pull/1974
+    well, let's keep it for later
+  * it creates a file like 'bundle.debr' that contains
+    *all information* to build the package *reproducibly*;
+    normally, it should not contain the base system (it should
+    be referenced to some rock solid place)
+
+
+Additional notes:
+
+  * I imagine it could be like that;
+    one day I do 'debootstrap' to get an initial image; then every
+    day there is an 'apt-get update' to advance the image; so on the
+    server there is a chain of images for every day
+
+    the developer builds a package using an automatically fetched
+    yesterday's tag to build on it; then he/she can distribute it
+    with DEB package, post it somewhere, or something like that

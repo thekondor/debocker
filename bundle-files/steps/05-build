@@ -1,0 +1,27 @@
+#!/bin/bash
+#
+# builds package
+#
+
+echo "== STAGE 04 (building package) =="
+
+set -eux
+
+source /root/source/buildinfo
+
+echo "Build flags: ${flags}"
+
+cd /root/source/build
+
+# TODO: also store stderr?
+dpkg-buildpackage ${flags} | tee /root/source/build.log
+
+cd /root/source
+name=$(basename --suffix .dsc *.dsc)
+mv build.log ${name}.build
+
+echo "+++ lintian output +++"
+lintian --pedantic --display-info *.changes
+echo "+++ end of lintian output +++"
+
+echo "== ENDSTAGE =="

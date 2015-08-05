@@ -1,0 +1,164 @@
+debocker(8) -- build Debian packages with docker
+=============================================
+
+## SYNOPSIS
+
+`debocker` [<OPTS>] `COMMAND` [<COMMAND OPTS>] [ARGS]
+
+## DESCRIPTION
+
+**Debocker** builds Debian packages inside docker. The build process
+is contained in docker images and (almost) no other tools are needed
+to develop Debian packages on the main system. Moreover, docker's
+image cache reuses the same system state whenever possible. In
+particular, when a package is built for the second time, its
+dependecies and buildchain are not downloaded nor installed again.
+
+**Debocker** is also able to create a self-contained *bundle* with
+everything necessary to build a package with docker only.
+
+You do not have to be root to run **debocker**, but you have to be
+able to use docker(1) command. In Debian, it means that you must be a
+member of the *docker* group.
+
+The build process consists of 5 steps:
+
+  1. *uprade* - the base image is updated to the most recent
+     packages (with apt-get)
+  2. *install-utils* - the Debian toolchain is installed
+  3. *install-deps* - the build dependencies of the package are
+     installed
+  4. *extract-source* - the source package is extracted
+  5. *build* - the proper build is executed
+
+## COMMANDS
+
+Each command accepts `--help` option that shows its basic CLI usage.
+
+  * `bundle` [`OPTS`] [`PATH`]: Create a tarball file containing
+    sources of a package in the current directory, and a series of
+    scripts to build it using docker. The resulting *bundle* is stored
+    in the parent directory as a tarball. If the package is
+    non-native, the original tarball must be present in the parent
+    directory. However, if the original tarball is not present,
+    debocker will try to extract it using pristine-tar(1).
+
+    The bundle is independent from debocker and can be used with
+    docker only (see [EXAMPLES][]).
+
+    Arguments:
+
+    `PATH`: optional path to the package; defaults to the current
+    directory
+
+    Options:
+
+    `-o FILE`, `--output FILE`: store bundle in `FILE`; the file is a
+    traditional tarball with a Debian source package, a Dockerfile,
+    and some utils
+    
+    `-f FLAGS`, `--flags FLAGS`: define builds flags that bundle will
+    use; these are passed to dpkg-buildpackage
+
+    `--from STEP`: invalidate `STEP` causing docker to restart from
+    this step, even if previous cache exists; possible values are:
+    *build*, *extract-source*, *install-deps*, *install-utils*,
+    *upgrade*
+
+    `--image IMAGE`: define the base docker image to use; defaults to
+    *debian:unstable*
+
+  * `build-bundle` [`OPTS`] `BUNDLE`: Build a tarball file created
+    with `bundle` by running the process in docker and extracting the
+    final files to the current directory. This multi-step process
+    takes advantage of docker's cache whenever possible, saving space
+    and making successive builds very fast.
+
+    Arguments:
+
+    `BUNDLE`: the location of a bundle to build
+
+    Options:
+
+    `-o DIRECTORY`, `--output DIRECTORY`: store the built files in
+    `DIRECTORY`
+
+    `-s`, `--sign`: sign the results of the build; this requires
+    installed **debsign** (see devscripts(1))
+
+    `--no-cache`: do not use docker's image cache (passed directly to
+    *docker build*); this effectively restarts the whole build from
+    the start
+
+    `--pull`: pull the newest base image if available (passed directly
+    to *docker build*)
+
+  * `build` [`OPTS`] [`PATH`]: Create a temporary bundle with `bundle`
+    and build it with `build-bundle`. The respective options are
+    passed unchanged to the subcommands (e.g., `-s` can be used to
+    sign packages).
+
+## OPTIONS
+
+  * `-v`, `--verbose`:
+    Make debocker's output verbose.
+
+  * `--help`:
+    Show summary of CLI usage.
+
+Global options must be given before the name of the command.
+
+## FILES
+
+There are no config files.
+
+## EXAMPLES
+
+Assuming that you are in a directory with a Debian source package:
+
+    $ debocker build
+
+will build the package in Debian unstable (the built files will be
+stored in the parent directory). If the build was successful, every
+subsequent run should use cache instead. You may force rebuild
+at any stage by using `--from` option. To rebuild the package,
+you may use:
+
+    $ debocker build --from=build
+
+The `build` command is equivalent, save for the undeleted,
+intermediary file, with:
+
+    $ debocker bundle --output /tmp/bundle.tar
+    $ debocker build-bundle /tmp/bundle.tar --output ..
+
+You may pass custom flags to your build:
+
+    $ debocker build --flags='-j4'
+
+To create a (pseudo)-reproducible, compressed bundle with your package
+and to build it using docker:
+
+    $ debocker bundle --output /tmp/bundle.tar
+    $ docker run - < /tmp/bundle.tar
+
+## BUGS
+
+Debocker does not clean after itself. If you are not careful, docker
+images may consume a lot of space.
+
+And probably many more.
+
+## AUTHOR
+
+Initial idea and coding has been done by Tomasz Buchert
+<tomasz@debian.org>.
+
+Initial packaging, many ideas and a lot of support by Dariusz
+Dwornikowski.
+
+The semi-official homepage is <http://debocker.debian.net>.
+
+## SEE ALSO
+
+pbuiler(8), docker(1), devscripts(1), pristine-tar(1)

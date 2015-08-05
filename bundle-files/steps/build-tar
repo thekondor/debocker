@@ -1,0 +1,17 @@
+#!/bin/bash
+# takes all build files and extracts them as tar
+# on the stdout
+
+set -eu
+
+source /root/source/info
+
+cd /root/source/
+
+if [ "${format}" = "native" ]; then
+    # native
+    exec tar -cf - *.build *.changes *.deb *.dsc *.tar.*
+else
+    # non-native
+    exec tar -cf - *.build *.changes *.deb *.dsc *.debian.tar.* *.orig.tar.*
+fi

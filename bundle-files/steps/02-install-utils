@@ -1,0 +1,15 @@
+#!/bin/bash
+#
+# installs build tools
+#
+
+echo "== STAGE 02 (installing build tools) =="
+
+set -eux
+
+apt-get -y --no-install-recommends \
+        install devscripts pbuilder build-essential aptitude lintian
+
+apt-get -y clean
+
+echo "== ENDSTAGE =="

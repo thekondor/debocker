@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -eu
+
+file=$(readlink -f "$0")
+here=$(dirname "$file")
+cd "$here"
+
+docker pull debian:unstable
+docker build -t debocker/unstable ./debian-build
+docker push debocker/unstable:latest

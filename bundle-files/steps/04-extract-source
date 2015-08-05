@@ -1,0 +1,16 @@
+#!/bin/bash
+#
+# extracts sources
+# the files are in /root/source
+
+echo "== STAGE 04 (extract sources) =="
+
+set -eux
+
+cd /root/source
+dpkg-source -x *.dsc ./build
+
+# remove .dsc so it does not collide with the build
+rm *.dsc
+
+echo "== ENDSTAGE =="

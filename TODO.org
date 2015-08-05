@@ -1,0 +1,12 @@
+* Things to do (ordered by priority)
+** add --debug to build the package with all debugging information
+** add more tests
+** replace --from with "docker rmi --no-prune=true"
+** it's not clear if running the build process as root is safe; switch to a normal user maybe?
+* Things to consider
+** consider using docker API (python-docker)
+* Done
+** skip .git directory from sources; actually, probably just store orig tarball
+** let pass build flags to dpkg-buildpackage
+** the bundles are not reproducible => make them so
+** add support for other dists (stable, experimental, etc.)

@@ -1,0 +1,18 @@
+#!/bin/bash
+#
+# updates Debian image
+#
+
+echo "== STAGE 01 (upgrading system) =="
+
+set -eux
+
+# TODO: currently, we don't need deb-src
+# echo "deb-src http://httpredir.debian.org/debian unstable main" \
+#     > /etc/apt/sources.list.d/unstable-deb-src.list
+
+apt-get -y update
+apt-get -y upgrade
+apt-get -y clean
+
+echo "== ENDSTAGE =="

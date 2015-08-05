@@ -1,0 +1,8 @@
+* BASIC:
+
+** debocker (re)create - creates unstable image for future builds (updated & so on)
+CREATES IMAGE: debocker:unstable
+** debocker (re)init - creates an image for future builds of the given package
+CREATES IMAGE: debocker:{pkg}
+** debocker build  - builds the current package in docker
+USES IMAGE: debocker:{pkg}
