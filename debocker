@@ -6,8 +6,7 @@ import re
 import os
 from os.path import isdir, join, isfile, abspath, dirname, \
     realpath, splitext, relpath
-from subprocess import check_call, check_output, CalledProcessError, DEVNULL
-from shutil import which, copytree, copyfile
+from shutil import which
 from shlex import quote as shell_quote
 from collections import OrderedDict
 from string import Template
@@ -20,6 +19,7 @@ sys.path.append(join(HERE, 'src'))
 from debocker.utils import cached_constant, cached_property, tmppath, \
     calculate_md5_and_size, log_check_call, log_check_output
 from debocker.log import log, LOW, fail
+from debocker.debian import extract_pristine_tar
 
 __version__ = "0.2"
 
@@ -43,36 +43,6 @@ def assert_command(cmd):
 def assert_docker():
     if which('docker') is None:
         fail('docker is not available')
-
-def extract_pristine_tar(path, candidates):
-    if which('pristine-tar') is None:
-        log('No pristine-tar available.', LOW)
-        return None
-    try:
-        tars = log_check_output([ 'pristine-tar', 'list' ], cwd = path)
-    except CalledProcessError:
-        log('Error in pristine-tar - giving up.', LOW)
-        return None
-    # let's hope that no non-utf8 files are stored
-    thelist = tars.decode('utf-8').split()
-    log('Pristine tarballs: {}'.format(thelist), LOW)
-    matches = list(set(thelist) & set(candidates))
-    if len(matches) > 0:
-        m = matches[0]
-        log("Found a match: '{}'.".format(m), LOW)
-        log_check_call([ 'pristine-tar', 'checkout', m ],
-                       cwd = path, stderr = DEVNULL)
-        try:
-            src = join(path, m)
-            dst = tmppath(m)
-            copyfile(src, dst)
-            log("Tarball extracted to '{}'.".format(dst), LOW)
-        finally:
-            os.unlink(src)
-        return dst
-    else:
-        log('No matching pristine tar found.', LOW)
-        return None
 
 class Package:
 
