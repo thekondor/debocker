@@ -4,10 +4,11 @@ import os
 import hashlib
 from tempfile import TemporaryDirectory
 from datetime import datetime
-from os.path import join, relpath
+from os.path import join, relpath, dirname, abspath, realpath, isdir
 from subprocess import check_call, check_output
+from shutil import which
 
-from .log import log, LOW
+from .log import log, fail, LOW
 
 def cached_constant(f):
     cache = []
@@ -79,3 +80,7 @@ def get_filelist(path, base = None):
         elements += [ join(p, x) for x in ds ]
         elements += [ join(p, x) for x in fs ]
     return sorted(elements)
+
+def assert_command(cmd):
+    if which(cmd) is None:
+        fail("command '{}' is not available", cmd)
