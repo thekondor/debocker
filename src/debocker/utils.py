@@ -4,7 +4,7 @@ import os
 import hashlib
 from tempfile import TemporaryDirectory
 from datetime import datetime
-from os.path import join
+from os.path import join, relpath
 from subprocess import check_call, check_output
 
 from .log import log, LOW
@@ -66,3 +66,16 @@ def log_check_call(cmd, **kwds):
 def log_check_output(cmd, **kwds):
     log('Run (output): {}'.format(cmd), LOW)
     return check_output(cmd, **kwds)
+
+def get_filelist(path, base = None):
+    # reproducible list of files
+    if base is None:
+        base = path
+    elements = []
+    for p, ds, fs in os.walk(path):
+        p = relpath(p, base)
+        if p != '.':
+            p = join('.', p)
+        elements += [ join(p, x) for x in ds ]
+        elements += [ join(p, x) for x in fs ]
+    return sorted(elements)

@@ -17,7 +17,8 @@ HERE = realpath(dirname(__file__))
 sys.path.append(join(HERE, 'src'))
 
 from debocker.utils import cached_constant, cached_property, tmppath, \
-    calculate_md5_and_size, log_check_call, log_check_output
+    calculate_md5_and_size, log_check_call, log_check_output, \
+    get_filelist
 from debocker.log import log, LOW, fail
 from debocker.debian import extract_pristine_tar
 
@@ -151,7 +152,7 @@ class Package:
         if comp:
             tar += [ compressions[comp] ]
         debian = join(self.path, 'debian')
-        filelist = get_reproducible_filelist(debian, self.path)
+        filelist = get_filelist(debian, self.path)
         tar += [ '--no-recursion', '-C', self.path ]
         tar += filelist
         log_check_call(tar, stdout = output)
@@ -206,19 +207,6 @@ def make_quilt_bundle(name, version, control,
     bundler.add_source_file(original_name, original, 'original_tarball')
     bundler.add_source_file(debian_name, debian, 'debian_tarball')
     bundler.write_bundle(output = output)
-
-def get_reproducible_filelist(path, base = None):
-    if base is None:
-        base = path
-    elements = []
-    for p, ds, fs in os.walk(path):
-        p = relpath(p, base)
-        if p != '.':
-            p = join('.', p)
-        elements += [ join(p, x) for x in ds ]
-        elements += [ join(p, x) for x in fs ]
-    return sorted(elements)
-
 
 # STEPS
 
@@ -341,7 +329,7 @@ class Bundler:
             with open(dockerfile, 'w') as f:
                 f.write(rendered)
 
-        file_list = get_reproducible_filelist(self.wdir)
+        file_list = get_filelist(self.wdir)
         # tar everything
         tar = [ 'tar', 'c', '-h', '--numeric-owner' ]
         tar += [ '--no-recursion' ]
