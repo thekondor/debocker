@@ -15,8 +15,6 @@ from debocker.utils import tmppath, \
 from debocker.log import log, fail, LOW, set_verbosity, is_verbose
 from debocker.debian import Package, docker_build_bundle, STAGES
 
-__version__ = "0.2"
-
 # CLI INTERFACE
 
 @click.group()

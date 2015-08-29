@@ -6,6 +6,7 @@ from shutil import which, copyfile, copytree
 from shlex import quote as shell_quote
 from os.path import isdir, join, isfile, abspath, splitext, \
     dirname, realpath
+from . import __version__
 from .log import log, fail, LOW
 from .utils import log_check_call, log_check_output, \
     tmppath, cached_property, get_filelist, calculate_md5_and_size, \

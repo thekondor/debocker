@@ -9,7 +9,7 @@ except ImportError:
     from distutils.core import setup, find_packages
 
 # Thanks requests
-with open('debocker', 'r') as fd:
+with open('src/debocker/__init__.py', 'r') as fd:
     version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
                         fd.read(), re.MULTILINE).group(1)
 
