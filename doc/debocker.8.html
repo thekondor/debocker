@@ -89,6 +89,11 @@ image cache reuses the same system state whenever possible. In
 particular, when a package is built for the second time, its
 dependecies and buildchain are not downloaded nor installed again.</p>
 
+<p><strong>Do not use debocker to build packages that will will be uploaded to
+the Debian archive</strong>, unless you use a trusted Debian base image (I
+mean it).  Currently, <strong>debocker</strong> uses Debian images from Docker
+registry which cannot be trusted for such use.</p>
+
 <p><strong>Debocker</strong> is also able to create a self-contained <em>bundle</em> with
 everything necessary to build a package with docker only.</p>
 
@@ -99,13 +104,13 @@ member of the <em>docker</em> group.</p>
 <p>The build process consists of 5 steps:</p>
 
 <ol>
-<li> <em>uprade</em> - the base image is updated to the most recent
+<li><em>upgrade</em> - the base image is updated to the most recent
  packages (with apt-get)</li>
-<li> <em>install-utils</em> - the Debian toolchain is installed</li>
-<li> <em>install-deps</em> - the build dependencies of the package are
+<li><em>install-utils</em> - the Debian toolchain is installed</li>
+<li><em>install-deps</em> - the build dependencies of the package are
  installed</li>
-<li> <em>extract-source</em> - the source package is extracted</li>
-<li> <em>build</em> - the proper build is executed</li>
+<li><em>extract-source</em> - the source package is extracted</li>
+<li><em>build</em> - the proper build is executed</li>
 </ol>
 
 
@@ -235,8 +240,7 @@ images may consume a lot of space.</p>
 
 <h2 id="AUTHOR">AUTHOR</h2>
 
-<p>Initial idea and coding has been done by Tomasz Buchert
-<a href="&#109;&#x61;&#x69;&#x6c;&#x74;&#111;&#x3a;&#116;&#111;&#109;&#x61;&#115;&#x7a;&#64;&#x64;&#x65;&#x62;&#x69;&#97;&#x6e;&#46;&#x6f;&#x72;&#103;" data-bare-link="true">&#116;&#x6f;&#109;&#97;&#x73;&#122;&#64;&#x64;&#x65;&#x62;&#105;&#97;&#110;&#46;&#x6f;&#114;&#103;</a>.</p>
+<p>Initial idea and coding has been done by Tomasz Buchert.</p>
 
 <p>Initial packaging, many ideas and a lot of support by Dariusz
 Dwornikowski.</p>
@@ -245,12 +249,12 @@ Dwornikowski.</p>
 
 <h2 id="SEE-ALSO">SEE ALSO</h2>
 
-<p><span class="man-ref">pbuiler<span class="s">(8)</span></span>, <span class="man-ref">docker<span class="s">(1)</span></span>, <span class="man-ref">devscripts<span class="s">(1)</span></span>, <span class="man-ref">pristine-tar<span class="s">(1)</span></span></p>
+<p><span class="man-ref">pbuilder<span class="s">(8)</span></span>, <span class="man-ref">docker<span class="s">(1)</span></span>, <span class="man-ref">devscripts<span class="s">(1)</span></span>, <span class="man-ref">pristine-tar<span class="s">(1)</span></span></p>
 
 
   <ol class='man-decor man-foot man foot'>
     <li class='tl'>Debian</li>
-    <li class='tc'>July 2015</li>
+    <li class='tc'>August 2015</li>
     <li class='tr'>debocker(8)</li>
   </ol>
 

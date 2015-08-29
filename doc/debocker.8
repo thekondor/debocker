@@ -1,7 +1,7 @@
 .\" generated with Ronn/v0.7.3
 .\" http://github.com/rtomayko/ronn/tree/0.7.3
 .
-.TH "DEBOCKER" "8" "July 2015" "Debian" "debocker"
+.TH "DEBOCKER" "8" "August 2015" "Debian" "debocker"
 .
 .SH "NAME"
 \fBdebocker\fR \- build Debian packages with docker
@@ -13,6 +13,9 @@
 \fBDebocker\fR builds Debian packages inside docker\. The build process is contained in docker images and (almost) no other tools are needed to develop Debian packages on the main system\. Moreover, docker\'s image cache reuses the same system state whenever possible\. In particular, when a package is built for the second time, its dependecies and buildchain are not downloaded nor installed again\.
 .
 .P
+\fBDo not use debocker to build packages that will will be uploaded to the Debian archive\fR, unless you use a trusted Debian base image (I mean it)\. Currently, \fBdebocker\fR uses Debian images from Docker registry which cannot be trusted for such use\.
+.
+.P
 \fBDebocker\fR is also able to create a self\-contained \fIbundle\fR with everything necessary to build a package with docker only\.
 .
 .P
@@ -22,7 +25,7 @@ You do not have to be root to run \fBdebocker\fR, but you have to be able to use
 The build process consists of 5 steps:
 .
 .IP "1." 4
-\fIuprade\fR \- the base image is updated to the most recent packages (with apt\-get)
+\fIupgrade\fR \- the base image is updated to the most recent packages (with apt\-get)
 .
 .IP "2." 4
 \fIinstall\-utils\fR \- the Debian toolchain is installed
@@ -187,7 +190,7 @@ Debocker does not clean after itself\. If you are not careful, docker images may
 And probably many more\.
 .
 .SH "AUTHOR"
-Initial idea and coding has been done by Tomasz Buchert \fItomasz@debian\.org\fR\.
+Initial idea and coding has been done by Tomasz Buchert\.
 .
 .P
 Initial packaging, many ideas and a lot of support by Dariusz Dwornikowski\.
@@ -196,4 +199,4 @@ Initial packaging, many ideas and a lot of support by Dariusz Dwornikowski\.
 The semi\-official homepage is \fIhttp://debocker\.debian\.net\fR\.
 .
 .SH "SEE ALSO"
-pbuiler(8), docker(1), devscripts(1), pristine\-tar(1)
+pbuilder(8), docker(1), devscripts(1), pristine\-tar(1)

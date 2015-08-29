@@ -14,6 +14,11 @@ image cache reuses the same system state whenever possible. In
 particular, when a package is built for the second time, its
 dependecies and buildchain are not downloaded nor installed again.
 
+**Do not use debocker to build packages that will will be uploaded to
+the Debian archive**, unless you use a trusted Debian base image (I
+mean it).  Currently, **debocker** uses Debian images from Docker
+registry which cannot be trusted for such use.
+
 **Debocker** is also able to create a self-contained *bundle* with
 everything necessary to build a package with docker only.
 
@@ -23,7 +28,7 @@ member of the *docker* group.
 
 The build process consists of 5 steps:
 
-  1. *uprade* - the base image is updated to the most recent
+  1. *upgrade* - the base image is updated to the most recent
      packages (with apt-get)
   2. *install-utils* - the Debian toolchain is installed
   3. *install-deps* - the build dependencies of the package are
@@ -151,8 +156,7 @@ And probably many more.
 
 ## AUTHOR
 
-Initial idea and coding has been done by Tomasz Buchert
-<tomasz@debian.org>.
+Initial idea and coding has been done by Tomasz Buchert.
 
 Initial packaging, many ideas and a lot of support by Dariusz
 Dwornikowski.
@@ -161,4 +165,4 @@ The semi-official homepage is <http://debocker.debian.net>.
 
 ## SEE ALSO
 
-pbuiler(8), docker(1), devscripts(1), pristine-tar(1)
+pbuilder(8), docker(1), devscripts(1), pristine-tar(1)
