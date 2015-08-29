@@ -5,7 +5,6 @@ import click
 import re
 import os
 import hashlib
-from tempfile import TemporaryDirectory
 from os.path import isdir, join, isfile, abspath, dirname, \
     realpath, splitext, relpath
 from subprocess import check_call, check_output, CalledProcessError, DEVNULL
@@ -13,7 +12,13 @@ from shutil import which, copytree, copyfile
 from shlex import quote as shell_quote
 from collections import OrderedDict
 from string import Template
-from datetime import datetime
+import sys
+
+HERE = realpath(dirname(__file__))
+# this is to allow to use it directory from source repository
+sys.path.append(join(HERE, 'src'))
+
+from debocker.utils import cached_constant, cached_property, tmppath
 
 __version__ = "0.2"
 
@@ -24,44 +29,6 @@ VERBOSITY = NONE
 
 def fail(msg, *params):
     raise click.ClickException(msg.format(*params))
-
-def cached_constant(f):
-    cache = []
-    def _f():
-        if len(cache) == 0:
-            cache.append(f())
-        return cache[0]
-    return _f
-
-def cached_property(f):
-    key = '_cached_' + f.__name__
-    def _f(self):
-        if not hasattr(self, key):
-            setattr(self, key, f(self))
-        return getattr(self, key)
-    return property(_f)
-
-def Counter(v = 0):
-    v = [ v ]
-    def _f():
-        v[0] += 1
-        return v[0]
-    return _f
-
-tmpdir = cached_constant(lambda: TemporaryDirectory())
-tmpunique = Counter()
-CURRENT_TIME = datetime.utcnow().isoformat()
-
-def tmppath(name = None, directory = False):
-    '''get a temp. path'''
-    count = tmpunique()
-    tmp_directory = tmpdir().name
-    if name is None:
-        name = 'tmp'
-    tmp_path = join(tmp_directory, '{:03d}-{}'.format(count, name))
-    if directory:
-        os.mkdir(tmp_path)
-    return tmp_path
 
 def log(msg, v = 0):
     if VERBOSITY == NONE:
