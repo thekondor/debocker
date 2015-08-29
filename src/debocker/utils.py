@@ -4,6 +4,7 @@ from tempfile import TemporaryDirectory
 from datetime import datetime
 from os.path import join
 import os
+import hashlib
 
 def cached_constant(f):
     cache = []
@@ -42,3 +43,15 @@ def tmppath(name = None, directory = False):
     if directory:
         os.mkdir(tmp_path)
     return tmp_path
+
+def calculate_md5_and_size(path):
+    md5 = hashlib.md5()
+    count = 0
+    with open(path, 'rb') as f:
+        while True:
+            buff = f.read(8192)
+            if len(buff) == 0:
+                break
+            count += len(buff)
+            md5.update(buff)
+    return md5.hexdigest(), count
