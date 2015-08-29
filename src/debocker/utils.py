@@ -1,10 +1,13 @@
 # utilities
 
+import os
+import hashlib
 from tempfile import TemporaryDirectory
 from datetime import datetime
 from os.path import join
-import os
-import hashlib
+from subprocess import check_call, check_output
+
+from .log import log, LOW
 
 def cached_constant(f):
     cache = []
@@ -55,3 +58,11 @@ def calculate_md5_and_size(path):
             count += len(buff)
             md5.update(buff)
     return md5.hexdigest(), count
+
+def log_check_call(cmd, **kwds):
+    log('Run (check): {}'.format(cmd), LOW)
+    return check_call(cmd, **kwds)
+
+def log_check_output(cmd, **kwds):
+    log('Run (output): {}'.format(cmd), LOW)
+    return check_output(cmd, **kwds)

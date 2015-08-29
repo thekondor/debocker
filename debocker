@@ -18,33 +18,10 @@ HERE = realpath(dirname(__file__))
 sys.path.append(join(HERE, 'src'))
 
 from debocker.utils import cached_constant, cached_property, tmppath, \
-    calculate_md5_and_size
+    calculate_md5_and_size, log_check_call, log_check_output
+from debocker.log import log, LOW, fail
 
 __version__ = "0.2"
-
-NONE, LOW = 0, 1
-VERBOSITY = NONE
-
-# USEFUL ROUTINES
-
-def fail(msg, *params):
-    raise click.ClickException(msg.format(*params))
-
-def log(msg, v = 0):
-    if VERBOSITY == NONE:
-        if v == 0:
-            click.secho('LOG {}'.format(msg), fg = 'green')
-    else:
-        if v <= VERBOSITY:
-            click.secho('LOG[{}] {}'.format(v, msg), fg = 'green')
-
-def log_check_call(cmd, **kwds):
-    log('Run (check): {}'.format(cmd), LOW)
-    return check_call(cmd, **kwds)
-
-def log_check_output(cmd, **kwds):
-    log('Run (output): {}'.format(cmd), LOW)
-    return check_output(cmd, **kwds)
 
 @cached_constant
 def find_bundle_files():
