@@ -4,9 +4,9 @@ from os.path import join
 from codecs import open
 
 try:
-    from setuptools import setup
+    from setuptools import setup, find_packages
 except ImportError:
-    from distutils.core import setup
+    from distutils.core import setup, find_packages
 
 # Thanks requests
 with open('debocker', 'r') as fd:
@@ -34,6 +34,8 @@ setup(
     license = "GPLv3+",
     zip_safe = False,
     scripts = ['debocker'],
+    packages = find_packages('src'),  # include all packages under src
+    package_dir = { '': 'src' },   # tell distutils packages are under src
     data_files = data_files,
     classifiers = [
         'Environment :: Console',
