@@ -13,8 +13,8 @@ Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/debocker.git
 
 Package: debocker
 Architecture: all
-Depends: docker.io,
-         python3 (>= 3.3),
+Recommends: docker.io
+Depends: python3 (>= 3.3),
          python3-click,
          ${misc:Depends},
          ${shlibs:Depends},
@@ -22,4 +22,4 @@ Depends: docker.io,
 Description: docker-powered package builder for Debian
  debocker builds Debian packages using docker. It is also capable to
  create bundles that can be shared to build the same package on
- different nodes.
+ a different machine.
