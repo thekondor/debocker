@@ -1,3 +1,9 @@
+debocker (0.2.1) unstable; urgency=medium
+
+  * d/control: recommend docker instead of depending on it (Closes: #796063)
+
+ -- Tomasz Buchert <tomasz@debian.org>  Thu, 05 Nov 2015 17:18:27 +0100
+
 debocker (0.2) unstable; urgency=low
 
   * Initial Release.
