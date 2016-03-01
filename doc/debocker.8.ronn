@@ -23,7 +23,7 @@ member of the *docker* group.
 
 The build process consists of 5 steps:
 
-  1. *uprade* - the base image is updated to the most recent
+  1. *upgrade* - the base image is updated to the most recent
      packages (with apt-get)
   2. *install-utils* - the Debian toolchain is installed
   3. *install-deps* - the build dependencies of the package are
