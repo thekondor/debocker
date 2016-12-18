@@ -2,11 +2,11 @@ Source: debocker
 Section: devel
 Priority: extra
 Maintainer: Tomasz Buchert <tomasz@debian.org>
-Build-Depends: debhelper (>= 9),
+Build-Depends: debhelper (>= 10),
                dh-python,
                python3 (>= 3.3),
                python3-setuptools
-Standards-Version: 3.9.6
+Standards-Version: 3.9.8
 Homepage: https://people.debian.org/~tomasz/debocker.html
 Vcs-Git: git://anonscm.debian.org/collab-maint/debocker.git
 Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/debocker.git
