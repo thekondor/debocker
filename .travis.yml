@@ -5,6 +5,5 @@ python:
 install:
  - pip install pylint
 script:
+ - pylint --disable=R,C debocker
  - python setup.py sdist
-after_script:
-- pylint --disable=R,C debocker
