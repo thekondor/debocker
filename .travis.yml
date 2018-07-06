@@ -3,6 +3,7 @@ python:
  - "3.3"
  - "3.4"
 install:
+ - pip install click
  - pip install pylint
 script:
  - pylint --disable=R,C debocker
