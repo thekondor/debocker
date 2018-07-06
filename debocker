@@ -48,7 +48,7 @@ def Counter(v = 0):
         return v[0]
     return _f
 
-tmpdir = cached_constant(lambda: TemporaryDirectory())
+tmpdir = cached_constant(lambda: TemporaryDirectory()) # pylint: disable=unnecessary-lambda
 tmpunique = Counter()
 CURRENT_TIME = datetime.utcnow().isoformat()
 
@@ -229,7 +229,7 @@ class Package:
             return self.orig_tarball  # simple alias
 
     def tar_package_debian(self, output, comp = None):
-        # TODO: make it reproducible
+        # TODO: make it reproducible # pylint: disable=fixme
         compressions = {
             'xz': '--xz'
         }
@@ -241,10 +241,6 @@ class Package:
         tar += [ '--no-recursion', '-C', self.path ]
         tar += filelist
         log_check_call(tar, stdout = output)
-
-    def tar_original_tarball(self, output, stdout):
-        orig = self.assert_orig_tarball()
-        return orig  # for now
 
     def build_docker_tarball_to_fd(self, output, buildinfo):
         '''builds the docker tarball that builds the package'''
@@ -297,7 +293,7 @@ def make_quilt_bundle(name, version, control,
                       buildinfo, native = False)
     _, oext = splitext(original)
     _, dext = splitext(debian)
-    # TODO: improve
+    # TODO: improve # pylint: disable=fixme
     uversion = version.split('-')[0]
     original_name = '{}_{}.orig.tar{}'.format(name, uversion, oext)
     debian_name = '{}_{}.debian.tar{}'.format(name, version, dext)
@@ -449,11 +445,11 @@ class Bundler:
         tar += file_list
         log_check_call(tar, stdout = output)
 
-def docker_build_bundle(bundle, no_cache, pull):
+def docker_build_bundle(bundle_name, no_cache, pull):
     '''builds the given image and returns the final image'''
-    # TODO: quite ugly, cannot be done cleaner?
+    # TODO: quite ugly, cannot be done cleaner? # pylint: disable=fixme
     build_log = tmppath()
-    bundle_esc = shell_quote(bundle)
+    bundle_esc = shell_quote(bundle_name)
     build_log_esc = shell_quote(build_log)
     docker_opts = []
     if no_cache:
@@ -477,7 +473,7 @@ def docker_build_bundle(bundle, no_cache, pull):
 @click.option('-v', '--verbose', count=True,
               help = 'be verbose, repeat for more effect')
 def cli(verbose):
-    global VERBOSITY
+    global VERBOSITY # pylint: disable=global-statement
     VERBOSITY = verbose
 
 @cli.command(help = 'Write tar bundle')
@@ -517,11 +513,11 @@ def bundle(path, output, flags, step, image):
               is_flag = True, help = 'do not use docker image cache')
 @click.option('--pull', default = False,
               is_flag = True, help = 'pull the newest base image')
-def build_bundle(bundle, output, sign, no_cache, pull):
+def build_bundle(bundle_name, output, sign, no_cache, pull):
     assert_docker()
     if sign:
         assert_command('debsign')
-    image = docker_build_bundle(bundle,
+    image = docker_build_bundle(bundle_name,
                                 no_cache = no_cache, pull = pull)
     log('Build successful (in {})'.format(image))
     # extract the build
@@ -536,7 +532,7 @@ def build_bundle(bundle, output, sign, no_cache, pull):
     log_check_call([ 'tar', 'xf', build_tar, '-C', output ])
     log("Build files stored in '{}'.".format(output))
     if sign:
-        # TODO: needs devscripts, and hence will not work outside Debian
+        # TODO: needs devscripts, and hence will not work outside Debian # pylint: disable=fixme
         # we probably have to copy/fork debsign, cause signing within
         # the container is not a good idea security-wise
         changes = [ fn for fn in tar_files if fn.endswith('.changes') ]
